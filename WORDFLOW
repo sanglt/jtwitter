@@ -1,0 +1,13 @@
+Class: jTwitter
+
+Variables:
+
+
+Method:
+
+  statuses.update(); // send update to twitter
+  trends.current(); // call trends current
+  search(); // Search
+  user.show(); // Get user information
+  user.friends(); // Get user friends
+  user.tweet(); //call search() with param user_id = user -> last tweet of user
