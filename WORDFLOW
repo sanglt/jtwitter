@@ -1,13 +1,12 @@
-Class: jTwitter
+Class twitterClass
 
-Variables:
-
-
+Properties:
+  statuses: {Array} Store all tweet receive, cache.
+  options: {Object} Options has been mixed from default option with user input options.
+  callUrl: {Object} Store callback to twitter server
+  
 Method:
-
-  statuses.update(); // send update to twitter
-  trends.current(); // call trends current
-  search(); // Search
-  user.show(); // Get user information
-  user.friends(); // Get user friends
-  user.tweet(); //call search() with param user_id = user -> last tweet of user
+  parseUsername: Replace @username with link to twitter profile
+  parseLink: Replace all link to real link
+  parseHashTag: Replace hashtag with link to twitter search page
+  parseTime: Parse time from computer style to human style 
