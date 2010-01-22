@@ -63,11 +63,11 @@ jQuery(function ($){
    * @return {String} : A human read time.
    */
   twitterClass.prototype.parseTime = function (timeValue) {
-    var values = timeValue.split(" ");
+    var values = timeValue.split (" ");
     timeValue = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
-    var parsed_date = Date.parse(timeValue);
+    var parsed_date = Date.parse (timeValue);
     var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
-    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    var delta = parseInt ((relative_to.getTime() - parsed_date) / 1000);
     delta = delta + (relative_to.getTimezoneOffset() * 60);
 
     if (delta < 60) {
@@ -75,15 +75,15 @@ jQuery(function ($){
     } else if(delta < 120) {
       return 'about a minute ago';
     } else if(delta < (60*60)) {
-      return  (parseInt(delta / 60)).toString() + ' minutes ago';
+      return  (parseInt (delta / 60)).toString() + ' minutes ago';
     } else if(delta < (120*60)) {
       return 'about an hour ago';
     } else if(delta < (24*60*60)) {
-      return 'about ' + (parseInt(delta / 3600)).toString() + ' hours ago';
+      return 'about ' + (parseInt (delta / 3600)).toString() + ' hours ago';
     } else if(delta < (48*60*60)) {
       return '1 day ago';
     } else {
-      return (parseInt(delta / 86400)).toString() + ' days ago';
+      return (parseInt (delta / 86400)).toString() + ' days ago';
     }
   }
 });
