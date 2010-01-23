@@ -3,20 +3,25 @@ jQuery(function ($){
    * Class twitterClass
    * @param {Object} options: options user input
    */
-  var twitterClass = function (options) {
-    // Store tweet receive
-    this.statuses = [];
+  var twitterClass = function () {
     // Default options
     this.options = {
       'screen_name' : '',
-      'count'       : 5
+      'count'       : 5,
+      'wrap'        : '<li class="tweetElement" />'
     }
-    // Extends options
-    options && $.extend(this.options, options);
     // twitter callback url
     this.callUrl = {
-      'user' : 'http://twitter.com/statuses/user_timeline.json'
+      'user' : 'http://twitter.com/statuses/user_timeline.json?callback=?'
     }
+  }
+  
+  /**
+   * Set options from user input
+   * @param {Object} options
+   */
+  twitterClass.prototype.setOptions = function (options) {
+    options && $.extend(this.options, options);
   }
   
   /**
@@ -55,6 +60,7 @@ jQuery(function ($){
     if (hashtag.test (text)) {
       text = text.replace (hashtag, '<a href="http://twitter.com/search?q=%23$2">$1$2</a>');
     }
+    return text;
   }
   
   /**
@@ -86,4 +92,59 @@ jQuery(function ($){
       return (parseInt (delta / 86400)).toString() + ' days ago';
     }
   }
+  
+  twitterClass.prototype.parseTweet = function (parentElement, data) {
+    var self = this;
+    $.each(data, function (index, tweet) {
+      tweet.text = self.parseLink(tweet.text)
+      tweet.text = self.parseUsername(tweet.text)
+      tweet.text = self.parseHashTag(tweet.text);
+      
+      var linkTweet  = '<a href="http://twitter.com/' + tweet.user.screen_name + '/status/' + tweet.id + '">'+ self.parseTime(tweet.created_at) + '</a>';
+      var linkReply = '';
+      if (tweet.in_reply_to_user_id !== null && tweet.in_reply_to_screen_name !== null && tweet.in_reply_to_status_id !== null) {
+        linkReply = ' <a href="http://twitter.com/' + tweet.in_reply_to_screen_name + '/status/' + tweet.in_reply_to_status_id + '">in reply to ' + tweet.in_reply_to_screen_name + ' </a>';
+      }
+      var tweetHTML = tweet.text + '<br />' + linkTweet + ' from ' + tweet.source + linkReply;
+      $(self.options.wrap).html(tweetHTML).appendTo(parentElement);
+    });
+  }
+  
+  
+  /**
+   * Get user tweet
+   * @param {Object} element
+   * @return {Object} element, for jQuery continue use. Like that: $('#list').userTweet().css()....
+   */
+  twitterClass.prototype.getUserTweet = function (element) {
+    // Check options
+    var options = this.options;
+    // Cache this object
+    var self = this;
+    $.getJSON(self.callUrl.user, { 'screen_name': options.screen_name, 'count': options.count}, function (data) {
+      self.parseTweet(element, data);
+    });
+    // For jQuery continue use
+    return element;
+  }
+  
+  
+  
+  // Extend $.fn
+  $.extend($.fn, {
+    // get user tweet
+    'userTweet': function () {
+      // Create twitter client object
+      var twitterClient = new twitterClass();
+      // Get user input options
+      var options = {};
+      if (arguments[0] !== undefined) options.screen_name = arguments[0];
+      if (arguments[1] !== undefined) options.count = arguments[1];
+      // Set options
+      twitterClient.setOptions(options);
+      // Get tweet of user
+      this.html('');
+      return twitterClient.getUserTweet(this); 
+    },
+  });
 });

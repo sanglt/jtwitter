@@ -5,8 +5,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>jtwitter test page</title>
         <script type="text/javascript" src="js/jquery-1.4.min.js"></script>
+        <script type="text/javascript" src="js/jtwitter.js"></script>
+        <script type="text/javascript" src="js/demo.js"></script>
     </head>
     <body>
-        <h1>jtwitter test page</h1>
+        <h1>jtwitter test page</h1> <hr />
+        
+        <h2>Get lastest user tweet</h2>
+        <label for="screen_name">Input twitter username: </label><input type="text" id="screen_name" value="sanglt" /> <label for="screen_limit">Limit: </label><input type="text" id="screen_limit" value="5" /> <button id="getUserTweet">Get tweet</button> 
+        <ul id="tweetUserList"></ul>
     </body>
 </html>
