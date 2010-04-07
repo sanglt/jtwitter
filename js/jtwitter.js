@@ -6,7 +6,7 @@ jQuery(function ($){
   var twitterClass = function () {
     // Default options
     this.options = {
-      'screen_name' : '',
+      'screen_name' : 'sanglt',
       'count'       : 5,
       'wrap'        : '<li class="tweetElement" />'
     }
@@ -80,8 +80,8 @@ jQuery(function ($){
    */
   twitterClass.prototype.parseTime = function (timeValue) {
     var values = timeValue.split (" ");
-    timeValue = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
-    var parsed_date = Date.parse (timeValue);
+    timeValue = values[1] + " " + values[2] + ", " + values[3];
+    var parsed_date = Date.parse(timeValue);
     var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
     var delta = parseInt ((relative_to.getTime() - parsed_date) / 1000);
     delta = delta + (relative_to.getTimezoneOffset() * 60);
