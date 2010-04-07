@@ -64,6 +64,15 @@ jQuery(function ($){
     return text;
   }
   
+  twitterClass.prototype.parseToHTML  = function (text) {
+    var replace = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
+    for (var character in replace) {
+      var regex = new RegExp(replace[character], 'g');
+      text = text.replace(regex, character);
+    }
+    return text;
+  }
+  
   /**
    * Parse time from tweet string to human readable.
    * @param {String} timeValue: time from tweet receive
@@ -106,7 +115,7 @@ jQuery(function ($){
       if (tweet.to_user_id !== null && tweet.to_user !== null && tweet.in_reply_to_status_id !== null) {
         linkReply = ' <a href="http://twitter.com/' + tweet.to_user + '">in reply to ' + tweet.to_user + ' </a>';
       }
-      var tweetHTML = tweet.text + '<br />' + linkTweet + ' from ' + tweet.source + linkReply;
+      var tweetHTML = tweet.text + '<br />' + linkTweet + ' from ' + self.parseToHTML(tweet.source) + linkReply;
       $(self.options.wrap).html(tweetHTML).appendTo(parentElement);
     });
   }
