@@ -97,7 +97,7 @@ jQuery(function ($){
   twitterClass.prototype.parseTweet = function (parentElement, data) {
     var self = this;
     $.each(data.results, function (index, tweet) {
-      console.log(tweet);
+      //console.log(tweet);
       tweet.text = self.parseLink(tweet.text)
       tweet.text = self.parseUsername(tweet.text)
       tweet.text = self.parseHashTag(tweet.text);
