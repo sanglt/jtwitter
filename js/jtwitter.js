@@ -12,7 +12,8 @@ jQuery(function ($){
     }
     // twitter callback url
     this.callUrl = {
-      'user' : 'http://twitter.com/statuses/user_timeline.json?callback=?'
+      'user' : 'http://twitter.com/statuses/user_timeline.json?callback=?',
+      'search' : 'http://search.twitter.com/search.json?callback=?'
     }
   }
   
@@ -95,15 +96,15 @@ jQuery(function ($){
   
   twitterClass.prototype.parseTweet = function (parentElement, data) {
     var self = this;
-    $.each(data, function (index, tweet) {
+    $.each(data.results, function (index, tweet) {
+      console.log(tweet);
       tweet.text = self.parseLink(tweet.text)
       tweet.text = self.parseUsername(tweet.text)
       tweet.text = self.parseHashTag(tweet.text);
-      
-      var linkTweet  = '<a href="http://twitter.com/' + tweet.user.screen_name + '/status/' + tweet.id + '">'+ self.parseTime(tweet.created_at) + '</a>';
+      var linkTweet  = '<a href="http://twitter.com/' + tweet.from_user + '/status/' + tweet.id + '">'+ self.parseTime(tweet.created_at) + '</a>';
       var linkReply = '';
-      if (tweet.in_reply_to_user_id !== null && tweet.in_reply_to_screen_name !== null && tweet.in_reply_to_status_id !== null) {
-        linkReply = ' <a href="http://twitter.com/' + tweet.in_reply_to_screen_name + '/status/' + tweet.in_reply_to_status_id + '">in reply to ' + tweet.in_reply_to_screen_name + ' </a>';
+      if (tweet.to_user_id !== null && tweet.to_user !== null && tweet.in_reply_to_status_id !== null) {
+        linkReply = ' <a href="http://twitter.com/' + tweet.to_user + '">in reply to ' + tweet.to_user + ' </a>';
       }
       var tweetHTML = tweet.text + '<br />' + linkTweet + ' from ' + tweet.source + linkReply;
       $(self.options.wrap).html(tweetHTML).appendTo(parentElement);
@@ -121,7 +122,7 @@ jQuery(function ($){
     var options = this.options;
     // Cache this object
     var self = this;
-    $.getJSON(self.callUrl.user, { 'screen_name': options.screen_name, 'count': options.count}, function (data) {
+    $.getJSON(self.callUrl.search, { 'q': 'from:' + options.screen_name, 'rpp': options.count}, function (data) {
       self.parseTweet(element, data);
     });
     // For jQuery continue use
