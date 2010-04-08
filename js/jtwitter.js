@@ -79,27 +79,42 @@ jQuery(function ($){
    * @return {String} : A human read time.
    */
   twitterClass.prototype.parseTime = function (timeValue) {
-    var values = timeValue.split (" ");
-    timeValue = values[1] + " " + values[2] + ", " + values[3];
-    var parsed_date = Date.parse(timeValue);
-    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
-    var delta = parseInt ((relative_to.getTime() - parsed_date) / 1000);
-    delta = delta + (relative_to.getTimezoneOffset() * 60);
-
-    if (delta < 60) {
-      return 'less than a minute ago';
-    } else if(delta < 120) {
-      return 'about a minute ago';
-    } else if(delta < (60*60)) {
-      return  (parseInt (delta / 60)).toString() + ' minutes ago';
-    } else if(delta < (120*60)) {
-      return 'about an hour ago';
-    } else if(delta < (24*60*60)) {
-      return 'about ' + (parseInt (delta / 3600)).toString() + ' hours ago';
-    } else if(delta < (48*60*60)) {
-      return '1 day ago';
-    } else {
-      return (parseInt (delta / 86400)).toString() + ' days ago';
+    var j = new Date();
+    var f = new Date(timeValue);
+    if ($.browser.msie) {
+        f = Date.parse(h.replace(/( \+)/, " UTC$1"))
+    }
+    var i = j - f;
+    var c = 1000, d = c * 60, e = d * 60, g = e * 24, b = g * 7;
+    if (isNaN(i) || i < 0) {
+        return ""
+    }
+    if (i < c * 7) {
+        return "right now"
+    }
+    if (i < d) {
+        return Math.floor(i / c) + " seconds ago"
+    }
+    if (i < d * 2) {
+        return "about 1 minute ago"
+    }
+    if (i < e) {
+        return Math.floor(i / d) + " minutes ago"
+    }
+    if (i < e * 2) {
+        return "about 1 hour ago"
+    }
+    if (i < g) {
+        return Math.floor(i / e) + " hours ago"
+    }
+    if (i > g && i < g * 2) {
+        return "yesterday"
+    }
+    if (i < g * 365) {
+        return Math.floor(i / g) + " days ago"
+    }
+    else {
+        return "over a year ago"
     }
   }
   
